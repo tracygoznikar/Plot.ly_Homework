@@ -22,30 +22,9 @@ function init() {
         sampleIDNames.forEach((sample) => {
             selector.append("option").text(sample).property("value");
         })
-        //build chart with first id name
-        buildPlot(sampleIDNames[0]);
-        
+        buildPlot(sampleIDNames[0]);  
     })
-   
 }
-//update demographic metadata
-let panelBody = d3.select("#sample-metadata");
-console.log(panelBody);
-//loop through the data and console.log each metadata object
-//https://www.w3schools.com/bootstrap/bootstrap_panels.asp
-metadata.forEach(function (bbMetaData) {
-    console.log(bbMetaData);
-    let  = panel-body.append("panel-body")
-    panel-body.append("panel-body").text(bbMetaData.id)
-    panel-body.append("panel-body").text(bbMetaData.ethnicity)
-    panel-body.append("panel-body").text(bbMetaData.gender)
-    panel-body.append("panel-body").text(bbMetaData.age)
-    panel-body.append("panel-body").text(bbMetaData.location)
-    panel-body.append("panel-body").text(bbMetaData.bbtype)
-    panel-body.append("panel-body").text(bbMetaData.wfreq)
-});
-
-
 //event when option is changed
 function optionChanged(newSample) {
     //buildplot function
@@ -65,9 +44,6 @@ function optionChanged(newSample) {
             //otu_labels 
             var otu_labels = filteredData.otu_labels;
             var otu_labels = otu_labels.slice(0,10).reverse();
-            //console.log(sample_values);
-            //console.log(otu_ids);
-            //console.log(otu_labels);
             
             let trace1 = {
                 x: sample_values,
@@ -76,9 +52,7 @@ function optionChanged(newSample) {
                 type: "bar",
                 orientation: "h"
             };
-
             let data1 = [trace1];
-
             let layout = {
                 xaxis: { title: "Sample Values" },
                 yaxis: { title: "OTU IDs" }
@@ -88,3 +62,33 @@ function optionChanged(newSample) {
     };
 
     init();
+
+//let metadata = samples.json[2]
+//"metadata":[{"id": 940, "ethnicity": "Caucasian", "gender": "F", "age": 24.0, 
+//"location": "Beaufort/NC", "bbtype": "I", "wfreq": 2.0}
+function buildDemographic(metadata) {
+d3.json("samples.json").then((metadata) => {
+    var metadata = data.metadata
+    var filteredMetaData = metadata.filter(m => m.id === id)[2]; 
+    let panelBody = d3.select("#sample-metadata");
+    console.log(panelBody);
+    panelBody.html("");
+    Object.entries(filteredMetaData).forEach(([key, value]) => {
+        var cell = row.append("");
+        cell.text(value);
+      });
+    //loop through the data and console.log each metadata object
+    //https://www.w3schools.com/bootstrap/bootstrap_panels.asp
+    metadata.forEach(function (bbMetaData) {
+        console.log(bbMetaData);
+        let  = panel-body.append("panel-body")
+        panel-body.append("panel-body").text(bbMetaData.id)
+        panel-body.append("panel-body").text(bbMetaData.ethnicity)
+        panel-body.append("panel-body").text(bbMetaData.gender)
+        panel-body.append("panel-body").text(bbMetaData.age)
+        panel-body.append("panel-body").text(bbMetaData.location)
+        panel-body.append("panel-body").text(bbMetaData.bbtype)
+        panel-body.append("panel-body").text(bbMetaData.wfreq)
+    });
+})};
+
