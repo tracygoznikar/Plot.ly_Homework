@@ -22,13 +22,18 @@ function init() {
         sampleIDNames.forEach((sample) => {
             selector.append("option").text(sample).property("value");
         })
-        buildPlot(sampleIDNames[0]);  
+        buildPlot(sampleIDNames[0]);
+        console.log(data);  
+        buildDemographic(data.metadata, +sampleIDNames[0]);
     })
+
 }
+init();
 //event when option is changed
 function optionChanged(newSample) {
     //buildplot function
         buildPlot(newSample);
+        buildDemographic(newSample);
     };
     //create bar chart
     function buildPlot(sample) {
@@ -58,37 +63,70 @@ function optionChanged(newSample) {
                 yaxis: { title: "OTU IDs" }
             };
             Plotly.newPlot("bar",data1, layout);
-        }) 
+            
+        //Buble chart
+        // Use otu_ids for the x values.
+        // Use sample_values for the y values.
+        // Use sample_values for the marker size.
+        // Use otu_ids for the marker colors.
+        // Use otu_labels for the text values.
+        var trace2 = {
+            x: otu_ids,
+            y: sample_values,
+            mode: 'markers',
+            marker: {
+                size: sample_values,
+                color: otu_ids,
+                colorscale: 'Earth'
+                // color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)',
+                //         'rgb(255, 0, 0)', 'rgb(204, 153, 255)', 'rgb(204, 255, 255)', 'rgb(255, 128, 0)',
+                //         'rgb(0, 0, 255)', 'rgb(255, 51, 153)', 'rgb(0, 255, 0)'],
+
+                // opacity: [1, 0.8, 0.6, 0.4, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6]
+            }
+        };
+        var data2 = [trace2];
+        var layout2 = {
+            title: " ",
+            showlegend: false,
+            xaxis: { title: "OTU ID" },
+            height: 500,
+            width: 900
+        };
+        Plotly.newPlot("bubble", data2, layout2);
+        })        
     };
 
-    init();
 
 //let metadata = samples.json[2]
 //"metadata":[{"id": 940, "ethnicity": "Caucasian", "gender": "F", "age": 24.0, 
 //"location": "Beaufort/NC", "bbtype": "I", "wfreq": 2.0}
-function buildDemographic(metadata) {
-d3.json("samples.json").then((metadata) => {
-    var metadata = data.metadata
-    var filteredMetaData = metadata.filter(m => m.id === id)[2]; 
+function buildDemographic(metadata, id) {
+// d3.json("samples.json").then((metadata) => {
+    // var metadata = data.metadata
+    var filteredMetaData = metadata.filter(m => m.id === id)[0]; 
     let panelBody = d3.select("#sample-metadata");
     console.log(panelBody);
     panelBody.html("");
     Object.entries(filteredMetaData).forEach(([key, value]) => {
-        var cell = row.append("");
+        var cell = panelBody.append("div");
         cell.text(value);
       });
     //loop through the data and console.log each metadata object
     //https://www.w3schools.com/bootstrap/bootstrap_panels.asp
-    metadata.forEach(function (bbMetaData) {
-        console.log(bbMetaData);
-        let  = panel-body.append("panel-body")
-        panel-body.append("panel-body").text(bbMetaData.id)
-        panel-body.append("panel-body").text(bbMetaData.ethnicity)
-        panel-body.append("panel-body").text(bbMetaData.gender)
-        panel-body.append("panel-body").text(bbMetaData.age)
-        panel-body.append("panel-body").text(bbMetaData.location)
-        panel-body.append("panel-body").text(bbMetaData.bbtype)
-        panel-body.append("panel-body").text(bbMetaData.wfreq)
-    });
-})};
+    // metadata.forEach(function (bbMetaData) {
+    //     console.log(bbMetaData);
+    //     panelBody.append("div").text(bbMetaData.id)
+    //     panelBody.append("div").text(bbMetaData.ethnicity)
+    //     panelBody.append("div").text(bbMetaData.gender)
+    //     panelBody.append("div").text(bbMetaData.age)
+    //     panelBody.append("div").text(bbMetaData.location)
+    //     panelBody.append("div").text(bbMetaData.bbtype)
+    //     panelBody.append("div").text(bbMetaData.wfreq)
+    // });
+// })
+};
+
+
+
 
